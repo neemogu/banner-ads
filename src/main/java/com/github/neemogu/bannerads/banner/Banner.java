@@ -28,6 +28,7 @@ public final class Banner {
     @Min(value = 0, message = "Banner price must be positive or zero value")
     private Double price;
     @ManyToOne(targetEntity = Category.class)
+    @NotNull(message = "Banner category cannot be null")
     @JoinColumn(name = "category_id")
     private Category category;
     @Column(name = "content")

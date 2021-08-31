@@ -1,6 +1,7 @@
 package com.github.neemogu.bannerads.request;
 
 import com.github.neemogu.bannerads.banner.Banner;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,4 +28,9 @@ public final class Request {
     private String ipAddress;
     @Column(name = "date")
     private Date date;
+
+    @PrePersist
+    public void initDate() {
+        date = new Date();
+    }
 }
