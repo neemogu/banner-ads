@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @Table(name = "banner")
-public class Banner {
+public final class Banner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

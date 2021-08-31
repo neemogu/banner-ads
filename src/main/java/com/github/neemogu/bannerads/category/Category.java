@@ -1,18 +1,20 @@
 package com.github.neemogu.bannerads.category;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.neemogu.bannerads.banner.Banner;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @Table(name = "category")
-public class Category {
+public final class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -27,5 +29,9 @@ public class Category {
     private String reqName;
     @Column(name = "deleted")
     @JsonIgnore
-    private Boolean deleted;
+    private Boolean deleted = false;
+
+    @OneToMany(mappedBy = "category")
+    @JsonIgnore
+    private List<Banner> banners;
 }
