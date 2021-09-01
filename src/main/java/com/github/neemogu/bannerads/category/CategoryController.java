@@ -50,9 +50,30 @@ public class CategoryController {
 
     @GetMapping("/list")
     public ResponseEntity<List<Category>> getCategoriesList(
-            @RequestParam(name = "searchName", defaultValue = "") String searchName
+            @RequestParam(name = "searchName", defaultValue = "") String searchName,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize
     ) {
-        return ResponseEntity.ok(service.getCategoryList(searchName));
+        CategoryFetchParameters parameters = CategoryFetchParameters.builder()
+                .searchName(searchName)
+                .page(page)
+                .pageSize(pageSize)
+                .build();
+        return ResponseEntity.ok(service.getCategoryList(parameters));
+    }
+
+    @GetMapping("/pages")
+    public ResponseEntity<Long> getCategoriesListPageCount(
+            @RequestParam(name = "searchName", defaultValue = "") String searchName,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize
+    ) {
+        CategoryFetchParameters parameters = CategoryFetchParameters.builder()
+                .searchName(searchName)
+                .page(page)
+                .pageSize(pageSize)
+                .build();
+        return ResponseEntity.ok(service.getCategoryListPageCount(parameters));
     }
 
     @GetMapping("/{id}")

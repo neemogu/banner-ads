@@ -2,10 +2,12 @@ package com.github.neemogu.bannerads.request;
 
 import com.github.neemogu.bannerads.banner.Banner;
 import com.github.neemogu.bannerads.banner.BannerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class RequestService {
@@ -13,6 +15,7 @@ public class RequestService {
     private final RequestRepository requestRepository;
     private final BannerRepository bannerRepository;
 
+    @Autowired
     public RequestService(RequestRepository requestRepository, BannerRepository bannerRepository) {
         this.requestRepository = requestRepository;
         this.bannerRepository = bannerRepository;
@@ -29,11 +32,11 @@ public class RequestService {
      * @return Banner content
      */
 
-    public String getNextBannerContent(String userAgent, String ipAddress, String categoryReqName) {
+    public Optional<String> getNextBannerContent(String userAgent, String ipAddress, String categoryReqName) {
         //TODO: implement selecting a banner
         Banner nextBanner = new Banner();
         addRequest(userAgent, ipAddress, nextBanner.getId());
-        return nextBanner.getContent();
+        return Optional.of(nextBanner.getContent());
     }
 
     private void addRequest(String userAgent, String ipAddress, Integer bannerId) {

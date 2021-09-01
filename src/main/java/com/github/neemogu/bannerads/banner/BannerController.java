@@ -46,9 +46,30 @@ public class BannerController {
 
     @GetMapping("/list")
     public ResponseEntity<List<Banner>> getBannersList(
-            @RequestParam(name = "searchName", defaultValue = "") String searchName
+            @RequestParam(name = "searchName", defaultValue = "") String searchName,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize
     ) {
-        return ResponseEntity.ok(service.getBannerList(searchName));
+        BannerFetchParameters parameters = BannerFetchParameters.builder()
+                .searchName(searchName)
+                .page(page)
+                .pageSize(pageSize)
+                .build();
+        return ResponseEntity.ok(service.getBannerList(parameters));
+    }
+
+    @GetMapping("/pages")
+    public ResponseEntity<Long> getBannersListPageCount(
+            @RequestParam(name = "searchName", defaultValue = "") String searchName,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize
+    ) {
+        BannerFetchParameters parameters = BannerFetchParameters.builder()
+                .searchName(searchName)
+                .page(page)
+                .pageSize(pageSize)
+                .build();
+        return ResponseEntity.ok(service.getBannerListPageCount(parameters));
     }
 
     @GetMapping("/{id}")

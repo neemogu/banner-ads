@@ -139,27 +139,53 @@ public final class CategoryService {
     }
 
     /**
-     * Returns list of categories containing search string in name
-     * or list of all categories if search string is empty. All categories in list is not deleted.
+     * Returns paged list of categories containing search string in name
+     * or paged list of all categories if search string is empty. All categories in list is not deleted.
      *
-     * @param searchName Search string
-     * @return List of categories containing search string
-     * or List of all categories if search string is empty
+     * @param parameters Parameters object containing page number, page size,
+     * and a search string
+     * @return Paged list of categories containing search string
+     * or paged list of all categories if search string is empty
      */
 
-    public List<Category> getCategoryList(String searchName) {
+    public List<Category> getCategoryList(CategoryFetchParameters parameters) {
         EntityManager em = entityManagerFactory.createEntityManager();
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Category> query = builder.createQuery(Category.class);
         Root<Category> root = query.from(Category.class);
 
-        List<Predicate> wherePredicates = getWherePredicates(builder, root, searchName);
-
+        List<Predicate> wherePredicates = getWherePredicates(builder, root, parameters.getSearchName());
         query.where(builder.and(wherePredicates.toArray(new Predicate[0])));
 
-        List<Category> result = em.createQuery(query.select(root)).getResultList();
+        List<Category> result = em.createQuery(query.select(root))
+                .setFirstResult(parameters.getPage() * parameters.getPageSize())
+                .setMaxResults(parameters.getPageSize()).getResultList();
         em.close();
         return result;
+    }
+
+    /**
+     * Returns number of pages of categories containing search string in name
+     * or number of pages of all categories if search string is empty.
+     *
+     * @param parameters Parameters object containing page number, page size and search string
+     * @return Number of pages of categories containing search string
+     * or number of pages of all categories if search string is empty
+     */
+
+    public long getCategoryListPageCount(CategoryFetchParameters parameters) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+        Root<Category> root = query.from(Category.class);
+
+        List<Predicate> wherePredicates = getWherePredicates(builder, root, parameters.getSearchName());
+        query.where(builder.and(wherePredicates.toArray(new Predicate[0])));
+        query.select(builder.count(root));
+
+        Long result = em.createQuery(query).getSingleResult();
+        em.close();
+        return result / parameters.getPageSize() + (result % parameters.getPageSize() == 0 ? 0 : 1);
     }
 
     /**

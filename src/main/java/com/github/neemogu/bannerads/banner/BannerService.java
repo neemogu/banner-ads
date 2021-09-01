@@ -1,5 +1,6 @@
 package com.github.neemogu.bannerads.banner;
 
+import com.github.neemogu.bannerads.util.SortDirection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -92,27 +93,59 @@ public class BannerService {
     }
 
     /**
-     * Returns list of banners containing search string in name
-     * or list of all banners if search string is empty. All banners in list is not deleted.
+     * Returns paged list of banners containing search string in name
+     * or paged list of all banners if search string is empty. All banners in list is not deleted.
      *
-     * @param searchName Search string
-     * @return List of banners containing search string
-     * or List of all banners if search string is empty
+     * @param parameters Parameters object containing page number, page size,
+     *                  sort direction, sort by field name and a search string
+     * @return Paged list of banners containing search string
+     * or paged list of all banners if search string is empty
      */
 
-    public List<Banner> getBannerList(String searchName) {
+    public List<Banner> getBannerList(BannerFetchParameters parameters) {
         EntityManager em = entityManagerFactory.createEntityManager();
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Banner> query = builder.createQuery(Banner.class);
         Root<Banner> root = query.from(Banner.class);
 
-        List<Predicate> wherePredicates = getWherePredicates(builder, root, searchName);
+        if (parameters.getSortDirection() == SortDirection.ASC) {
+            query.orderBy(builder.asc(root.get(parameters.getSortBy().name().toLowerCase())));
+        } else if (parameters.getSortDirection() == SortDirection.DESC) {
+            query.orderBy(builder.desc(root.get(parameters.getSortBy().name().toLowerCase())));
+        }
 
+        List<Predicate> wherePredicates = getWherePredicates(builder, root, parameters.getSearchName());
         query.where(builder.and(wherePredicates.toArray(new Predicate[0])));
 
-        List<Banner> result = em.createQuery(query.select(root)).getResultList();
+        List<Banner> result = em.createQuery(query.select(root))
+                .setFirstResult(parameters.getPage() * parameters.getPageSize())
+                .setMaxResults(parameters.getPageSize()).getResultList();
         em.close();
         return result;
+    }
+
+    /**
+     * Returns number of pages of banners containing search string in name
+     * or number of pages of all banners if search string is empty.
+     *
+     * @param parameters Parameters object containing page number, page size and search string
+     * @return Number of pages of banners containing search string
+     * or number of pages of all banners if search string is empty
+     */
+
+    public long getBannerListPageCount(BannerFetchParameters parameters) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+        Root<Banner> root = query.from(Banner.class);
+
+        List<Predicate> wherePredicates = getWherePredicates(builder, root, parameters.getSearchName());
+        query.where(builder.and(wherePredicates.toArray(new Predicate[0])));
+        query.select(builder.count(root));
+
+        Long result = em.createQuery(query).getSingleResult();
+        em.close();
+        return result / parameters.getPageSize() +(result % parameters.getPageSize() == 0 ? 0 : 1);
     }
 
     /**
