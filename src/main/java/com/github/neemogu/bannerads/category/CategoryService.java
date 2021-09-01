@@ -1,6 +1,7 @@
 package com.github.neemogu.bannerads.category;
 
 import com.github.neemogu.bannerads.banner.Banner;
+import com.github.neemogu.bannerads.banner.BannerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +20,15 @@ import java.util.stream.Collectors;
 
 @Service
 public final class CategoryService {
-    private final CategoryRepository repository;
+    private final CategoryRepository categoryRepository;
+    private final BannerRepository bannerRepository;
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
     @Autowired
-    public CategoryService(CategoryRepository repository) {
-        this.repository = repository;
+    public CategoryService(CategoryRepository categoryRepository, BannerRepository bannerRepository) {
+        this.categoryRepository = categoryRepository;
+        this.bannerRepository = bannerRepository;
     }
 
     /**
@@ -46,7 +49,7 @@ public final class CategoryService {
         if (checked.isPresent()) {
             return checked;
         }
-        repository.save(category);
+        categoryRepository.save(category);
         return Optional.empty();
     }
 
@@ -59,14 +62,14 @@ public final class CategoryService {
     }
 
     private Optional<String> checkExistingCategoryByName(Category category) {
-        if (repository.existsByNameAndIdIsNot(category.getName(), category.getId())) {
+        if (categoryRepository.existsByNameAndIdIsNot(category.getName(), category.getId())) {
             return Optional.of("Category with such name is already exist");
         }
         return Optional.empty();
     }
 
     private Optional<String> checkExistingCategoryByReqName(Category category) {
-        if (repository.existsByReqNameAndIdIsNot(category.getReqName(), category.getId())) {
+        if (categoryRepository.existsByReqNameAndIdIsNot(category.getReqName(), category.getId())) {
             return Optional.of("Category with such request name is already exist");
         }
         return Optional.empty();
@@ -81,24 +84,24 @@ public final class CategoryService {
     }
 
     private Optional<String> checkNewCategoryByName(Category category) {
-        Optional<Category> foundByName = repository.findByName(category.getName());
+        Optional<Category> foundByName = categoryRepository.findByName(category.getName());
         if (foundByName.isPresent()) {
             if (!foundByName.get().getDeleted()) {
                 return Optional.of("Category with such name is already exists");
             } else {
-                repository.delete(foundByName.get());
+                categoryRepository.delete(foundByName.get());
             }
         }
         return Optional.empty();
     }
 
     private Optional<String> checkNewCategoryByReqName(Category category) {
-        Optional<Category> foundByReqName = repository.findByReqName(category.getReqName());
+        Optional<Category> foundByReqName = categoryRepository.findByReqName(category.getReqName());
         if (foundByReqName.isPresent()) {
             if (!foundByReqName.get().getDeleted()) {
                 return Optional.of("Category with such request name is already exists");
             } else {
-                repository.delete(foundByReqName.get());
+                categoryRepository.delete(foundByReqName.get());
             }
         }
         return Optional.empty();
@@ -108,23 +111,20 @@ public final class CategoryService {
      * Removes a category by it's id from a database.
      *
      * @param id Category id.
-     * @return If category has any banners returns a list of these banners,
-     * else returns an empty list.
+     * @return Optional - string containing error message if there was an error else empty
      */
-    public List<Banner> deleteCategory(Integer id) {
-        Category category = repository.findById(id).orElse(null);
+    public Optional<String> deleteCategory(Integer id) {
+        Category category = categoryRepository.findById(id).orElse(null);
         if (category != null) {
-            List<Banner> banners = category.getBanners()
-                    .stream()
-                    .filter(b -> !b.getDeleted())
-                    .collect(Collectors.toList());
+            List<Banner> banners = bannerRepository.findAllByDeletedFalseAndCategoryIs(category);
             if (banners.size() > 0) {
-                return banners;
+                List<Integer> bannerIds = banners.stream().map(Banner::getId).collect(Collectors.toList());
+                return Optional.of("Error: category still has banners with IDs: " + bannerIds);
             }
             category.setDeleted(true);
             saveCategory(category);
         }
-        return Collections.emptyList();
+        return Optional.empty();
     }
 
     private List<Predicate> getWherePredicates(CriteriaBuilder builder,
@@ -195,7 +195,7 @@ public final class CategoryService {
      * @return Optional - category object if category with such id exists and not deleted else empty
      */
     public Optional<Category> getSpecificCategory(Integer id) {
-        Optional<Category> found = repository.findById(id);
+        Optional<Category> found = categoryRepository.findById(id);
         if (found.isPresent() && found.get().getDeleted()) {
             return Optional.empty();
         }

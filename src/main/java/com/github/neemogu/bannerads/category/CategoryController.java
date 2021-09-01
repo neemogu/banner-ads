@@ -38,14 +38,14 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<List<Banner>> deleteCategory(
+    public ResponseEntity<String> deleteCategory(
             @PathVariable("id") Integer id
     ) {
-        List<Banner> notDeletedBanners = service.deleteCategory(id);
-        if (notDeletedBanners.isEmpty()) {
+        Optional<String> error = service.deleteCategory(id);
+        if (error.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(notDeletedBanners, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(error.get(), HttpStatus.CONFLICT);
     }
 
     @GetMapping("/list")
