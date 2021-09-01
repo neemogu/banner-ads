@@ -139,13 +139,11 @@ public final class CategoryService {
     }
 
     /**
-     * Returns paged list of categories containing search string in name
-     * or paged list of all categories if search string is empty. All categories in list is not deleted.
+     * Returns paged list of categories satisfying the parameters. All categories in list is not deleted.
+     * If search string is empty there won't be any filtering by name.
      *
-     * @param parameters Parameters object containing page number, page size,
-     * and a search string
-     * @return Paged list of categories containing search string
-     * or paged list of all categories if search string is empty
+     * @param parameters Parameters object containing page number, page size and a search string.
+     * @return Paged list of categories satisfying the parameters.
      */
 
     public List<Category> getCategoryList(CategoryFetchParameters parameters) {
@@ -165,12 +163,11 @@ public final class CategoryService {
     }
 
     /**
-     * Returns number of pages of categories containing search string in name
-     * or number of pages of all categories if search string is empty.
+     * Returns number of pages of categories satisfying the parameters.
+     * If search string is empty there won't be any filtering by name.
      *
-     * @param parameters Parameters object containing page number, page size and search string
-     * @return Number of pages of categories containing search string
-     * or number of pages of all categories if search string is empty
+     * @param parameters Parameters object containing page size and search string.
+     * @return Number of pages of categories satisfying the parameters.
      */
 
     public long getCategoryListPageCount(CategoryFetchParameters parameters) {
@@ -189,10 +186,10 @@ public final class CategoryService {
     }
 
     /**
-     * Returns a category by it's id
+     * Returns a category by it's id.
      *
-     * @param id Category id
-     * @return Optional - category object if category with such id exists and not deleted else empty
+     * @param id Category id.
+     * @return Optional - category object if category with such id exists and not deleted else empty.
      */
     public Optional<Category> getSpecificCategory(Integer id) {
         Optional<Category> found = categoryRepository.findById(id);

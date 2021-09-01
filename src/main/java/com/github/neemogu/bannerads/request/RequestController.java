@@ -1,5 +1,6 @@
 package com.github.neemogu.bannerads.request;
 
+import com.github.neemogu.bannerads.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,15 @@ public class RequestController {
             @RequestParam(name = "category") String categoryReqName,
             HttpServletRequest request
     ) {
-        Optional<String> nextBannerContent = service.getNextBannerContent(
-                request.getHeader("User-Agent"),
-                request.getRemoteAddr() + ":" + request.getRemotePort(),
-                categoryReqName);
+        Optional<String> nextBannerContent;
+        try {
+            nextBannerContent = service.getNextBannerContent(
+                    request.getHeader("User-Agent"),
+                    request.getRemoteAddr() + ":" + request.getRemotePort(),
+                    categoryReqName);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return nextBannerContent
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));

@@ -4,11 +4,13 @@ import com.github.neemogu.bannerads.util.SortDirection;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Builder
 public final class BannerFetchParameters {
     @Builder.Default
+    @Setter
     private int page = 0;
     @Builder.Default
     private int pageSize = 20;
@@ -18,4 +20,6 @@ public final class BannerFetchParameters {
     private SortDirection sortDirection = SortDirection.NONE;
     @Builder.Default
     private String searchName = "";
+    @Builder.Default
+    private Integer categoryId = null;
 }

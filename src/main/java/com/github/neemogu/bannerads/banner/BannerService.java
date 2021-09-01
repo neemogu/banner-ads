@@ -1,5 +1,6 @@
 package com.github.neemogu.bannerads.banner;
 
+import com.github.neemogu.bannerads.category.Category;
 import com.github.neemogu.bannerads.util.SortDirection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,10 +8,8 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +31,7 @@ public class BannerService {
      * a banner in a database.
      *
      * @param banner Banner object.
-     * @return Optional - string containing error message if there was an error else empty
+     * @return Optional - string containing error message if there was an error else empty.
      */
     public Optional<String> saveBanner(Banner banner) {
         Optional<String> checked;
@@ -83,23 +82,26 @@ public class BannerService {
 
     private List<Predicate> getWherePredicates(CriteriaBuilder builder,
                                                Root<Banner> root,
-                                               String searchName) {
+                                               String searchName,
+                                               Integer categoryId) {
         List<Predicate> predicates = new LinkedList<>();
         if (!searchName.equals("")) {
             predicates.add(builder.like(builder.lower(root.get("name")), "%" + searchName.toLowerCase() + "%"));
+        }
+        if (categoryId != null) {
+            predicates.add(builder.equal(root.get("category").get("id"), categoryId));
         }
         predicates.add(builder.isFalse(root.get("deleted")));
         return predicates;
     }
 
     /**
-     * Returns paged list of banners containing search string in name
-     * or paged list of all banners if search string is empty. All banners in list is not deleted.
+     * Returns paged list of banners satisfying the parameters. All banners in list is not deleted.
+     * If search string is empty there won't be any filtering by name.
      *
-     * @param parameters Parameters object containing page number, page size,
-     *                  sort direction, sort by field name and a search string
-     * @return Paged list of banners containing search string
-     * or paged list of all banners if search string is empty
+     * @param parameters Parameters object that contain page number, page size,
+     *                  sort direction, sort by field name, a search string and may contain a category id.
+     * @return Paged list of banners satisfying the parameters.
      */
 
     public List<Banner> getBannerList(BannerFetchParameters parameters) {
@@ -114,7 +116,12 @@ public class BannerService {
             query.orderBy(builder.desc(root.get(parameters.getSortBy().name().toLowerCase())));
         }
 
-        List<Predicate> wherePredicates = getWherePredicates(builder, root, parameters.getSearchName());
+        List<Predicate> wherePredicates = getWherePredicates(
+                builder,
+                root,
+                parameters.getSearchName(),
+                parameters.getCategoryId()
+        );
         query.where(builder.and(wherePredicates.toArray(new Predicate[0])));
 
         List<Banner> result = em.createQuery(query.select(root))
@@ -125,12 +132,11 @@ public class BannerService {
     }
 
     /**
-     * Returns number of pages of banners containing search string in name
-     * or number of pages of all banners if search string is empty.
+     * Returns number of pages of banners satisfying the parameters.
+     * If search string is empty there won't be any filtering by name.
      *
-     * @param parameters Parameters object containing page number, page size and search string
-     * @return Number of pages of banners containing search string
-     * or number of pages of all banners if search string is empty
+     * @param parameters Parameters object that contain page size, a search string and may contain a category id.
+     * @return Number of pages of banners satisfying the parameters.
      */
 
     public long getBannerListPageCount(BannerFetchParameters parameters) {
@@ -139,7 +145,12 @@ public class BannerService {
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
         Root<Banner> root = query.from(Banner.class);
 
-        List<Predicate> wherePredicates = getWherePredicates(builder, root, parameters.getSearchName());
+        List<Predicate> wherePredicates = getWherePredicates(
+                builder,
+                root,
+                parameters.getSearchName(),
+                parameters.getCategoryId()
+        );
         query.where(builder.and(wherePredicates.toArray(new Predicate[0])));
         query.select(builder.count(root));
 
@@ -149,10 +160,10 @@ public class BannerService {
     }
 
     /**
-     * Returns a banner by it's id
+     * Returns a banner by it's id.
      *
-     * @param id Banner id
-     * @return Optional - banner object if banner with such id exists and not deleted else empty
+     * @param id Banner id.
+     * @return Optional - banner object if banner with such id exists and not deleted else empty.
      */
     public Optional<Banner> getSpecificBanner(Integer id) {
         Optional<Banner> found = repository.findById(id);
