@@ -2,7 +2,6 @@ package com.github.neemogu.bannerads.banner;
 
 import com.github.neemogu.bannerads.util.SortDirection;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
