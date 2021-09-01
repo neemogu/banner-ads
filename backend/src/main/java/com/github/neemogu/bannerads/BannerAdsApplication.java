@@ -1,4 +1,4 @@
-package com.github.neemogu.bannerads.init;
+package com.github.neemogu.bannerads;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

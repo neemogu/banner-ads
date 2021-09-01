@@ -10,15 +10,11 @@
     </parent>
     <groupId>com.github.neemogu</groupId>
     <artifactId>banner-ads</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>banner-ads</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>11</java.version>
-        <flyway.user>user</flyway.user>
-        <flyway.password>180101</flyway.password>
-        <flyway.schemas>banners</flyway.schemas>
-        <flyway.url>jdbc:postgresql://db:5</flyway.url>
         <flyway.locations>/db/migration</flyway.locations>
     </properties>
     <dependencies>
