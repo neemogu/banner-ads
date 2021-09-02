@@ -31,7 +31,7 @@ public class RequestController {
         try {
             nextBannerContent = service.getNextBannerContent(
                     request.getHeader("User-Agent"),
-                    request.getRemoteAddr() + ":" + request.getRemotePort(),
+                    request.getRemoteAddr(),
                     categoryReqName);
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

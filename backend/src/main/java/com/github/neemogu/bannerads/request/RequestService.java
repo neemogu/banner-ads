@@ -9,7 +9,6 @@ import com.github.neemogu.bannerads.category.CategoryRepository;
 import com.github.neemogu.bannerads.exceptions.BadRequestException;
 import com.github.neemogu.bannerads.util.SortDirection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -84,15 +83,5 @@ public class RequestService {
         newRequest.setUserAgent(userAgent);
         newRequest.setIpAddress(ipAddress);
         requestRepository.save(newRequest);
-    }
-
-    /**
-     * Scheduled task that removes expired requests (older than one day).
-     */
-
-    @Scheduled(fixedRate = 5 * 60 * 1000, initialDelay = millisInDay)
-    public void deleteExpiredRequests() {
-        Date yesterday = new Date(System.currentTimeMillis() - millisInDay);
-        requestRepository.deleteAllByDateBefore(yesterday);
     }
 }

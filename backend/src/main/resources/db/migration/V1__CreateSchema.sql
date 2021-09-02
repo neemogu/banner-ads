@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS banner (
 );
 
 CREATE TABLE IF NOT EXISTS request (
-    id int PRIMARY KEY ,
+    id int PRIMARY KEY AUTO_INCREMENT,
     banner_id int NOT NULL ,
     user_agent text ,
     ip_address varchar(255) ,
