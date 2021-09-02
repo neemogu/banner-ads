@@ -24,7 +24,7 @@ public class BannerController {
         banner.setId(null);
         Optional<String> error = service.saveBanner(banner);
         return error
-                .map(s -> new ResponseEntity<>(s, HttpStatus.BAD_REQUEST))
+                .map(s -> new ResponseEntity<>(s, HttpStatus.CONFLICT))
                 .orElseGet(() -> ResponseEntity.ok("OK"));
     }
 
@@ -32,7 +32,7 @@ public class BannerController {
     public ResponseEntity<String> updateBanner(@RequestBody @Valid Banner banner) {
         Optional<String> error = service.saveBanner(banner);
         return error
-                .map(s -> new ResponseEntity<>(s, HttpStatus.BAD_REQUEST))
+                .map(s -> new ResponseEntity<>(s, HttpStatus.CONFLICT))
                 .orElseGet(() -> ResponseEntity.ok("OK"));
     }
 
@@ -50,6 +50,9 @@ public class BannerController {
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize
     ) {
+        if (pageSize > 100) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         BannerFetchParameters parameters = BannerFetchParameters.builder()
                 .searchName(searchName)
                 .page(page)
@@ -64,6 +67,9 @@ public class BannerController {
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize
     ) {
+        if (pageSize > 100) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         BannerFetchParameters parameters = BannerFetchParameters.builder()
                 .searchName(searchName)
                 .page(page)

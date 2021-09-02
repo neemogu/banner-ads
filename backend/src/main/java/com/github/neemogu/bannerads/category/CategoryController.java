@@ -53,6 +53,9 @@ public class CategoryController {
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize
     ) {
+        if (pageSize > 100) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         CategoryFetchParameters parameters = CategoryFetchParameters.builder()
                 .searchName(searchName)
                 .page(page)
@@ -64,12 +67,13 @@ public class CategoryController {
     @GetMapping("/pages")
     public ResponseEntity<Long> getCategoriesListPageCount(
             @RequestParam(name = "searchName", defaultValue = "") String searchName,
-            @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "pageSize", defaultValue = "20") Integer pageSize
     ) {
+        if (pageSize > 100) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         CategoryFetchParameters parameters = CategoryFetchParameters.builder()
                 .searchName(searchName)
-                .page(page)
                 .pageSize(pageSize)
                 .build();
         return ResponseEntity.ok(service.getCategoryListPageCount(parameters));

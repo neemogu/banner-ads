@@ -9,18 +9,18 @@ interface EntityListProps {
 }
 
 function EntityList(props: EntityListProps) {
-    if (!props.isLoaded) {
-        return (
-            <h1 className="loading">
-                Loading...
-            </h1>
-        );
-    }
     if (props.error) {
         return (
             <h3>
                 Error occurred, try to refresh a page
             </h3>
+        );
+    }
+    if (!props.isLoaded) {
+        return (
+            <h1 className="loading">
+                Loading...
+            </h1>
         );
     }
     return (

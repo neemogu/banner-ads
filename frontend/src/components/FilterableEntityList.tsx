@@ -9,7 +9,8 @@ import {Pagination} from "@material-ui/lab";
 interface FilterableEntityListProps {
     chooseEntity: (entityId: number|null) => void,
     selectedId: number|null,
-    entityType: EntityType
+    entityType: EntityType,
+    listUpdater: boolean
 }
 
 const pageSize = 10;
@@ -24,6 +25,7 @@ function FilterableEntityList(props: FilterableEntityListProps) {
 
     useEffect(() => {
         setIsLoaded(false);
+        setError(null);
         const getUrlParameters = () => {
             return "?page=" + (page - 1) + "&pageSize=" + pageSize + "&searchName=" + searchStr;
         };
@@ -33,9 +35,12 @@ function FilterableEntityList(props: FilterableEntityListProps) {
                     error => setError(error))
         fetch(backUrl + "/" + entityPluralForm.get(props.entityType) + "/list" + getUrlParameters())
             .then(response => response.json())
-            .then(data => setEntityList(data.map((e: any) => { return {id: e.id, name: e.name} })),
-                error => { setIsLoaded(true); setError(error) })
-    }, [searchStr, page, props.entityType]);
+            .then(data => {
+                    setEntityList(data.map((e: any) => { return {id: e.id, name: e.name} }));
+                    setIsLoaded(true);
+                },
+                error => setError(error))
+    }, [searchStr, page, props.entityType, props.listUpdater]);
 
     return (
         <div className="filterable-entity-list">

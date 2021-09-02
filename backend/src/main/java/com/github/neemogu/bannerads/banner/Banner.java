@@ -37,5 +37,5 @@ public final class Banner {
     private String content;
     @Column(name = "deleted")
     @JsonIgnore
-    private Boolean deleted;
+    private Boolean deleted = false;
 }

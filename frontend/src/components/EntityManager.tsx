@@ -9,15 +9,17 @@ interface EntityManagerProps {
 
 function EntityManager(props: EntityManagerProps) {
     const [selectedEntityId, setSelectedEntityId] = useState<number|null>(null);
-
+    const [listUpdater, setListUpdater] = useState<boolean>(false);
     return (
         <div className="entity-manager">
             <FilterableEntityList entityType={props.entityType}
                                   selectedId={selectedEntityId}
-                                  chooseEntity={setSelectedEntityId}/>
+                                  chooseEntity={setSelectedEntityId}
+                                  listUpdater={listUpdater}/>
             <EntityEditor entityId={selectedEntityId}
                           entityType={props.entityType}
-                          changeSelectedId={setSelectedEntityId}/>
+                          changeSelectedId={setSelectedEntityId}
+            listUpdater={setListUpdater}/>
         </div>
     );
 }

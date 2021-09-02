@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {backUrl} from "../backend";
-import set = Reflect.set;
 
 interface CategoryEditorProps {
     categoryId: number|null,
-    changeSelectedId: (id: number|null) => void
+    changeSelectedId: (id: number|null) => void,
+    listUpdater: (setter: (b: boolean) => boolean) => void
 }
 
 function CategoryEditor(props: CategoryEditorProps) {
@@ -15,6 +15,9 @@ function CategoryEditor(props: CategoryEditorProps) {
     const [message, setMessage] = useState<string|null>(null);
 
     useEffect(() => {
+        setError(null);
+        setInputErrors({});
+        setMessage(null);
         if (props.categoryId !== null) {
             fetch(backUrl + '/categories/' + props.categoryId)
                 .then(response => {
@@ -29,10 +32,13 @@ function CategoryEditor(props: CategoryEditorProps) {
                 })
                 .then(data => {
                     setName(data.name)
-                    setReqName(data.name)
+                    setReqName(data.reqName)
                 }, error => {
                     setError(error);
                 })
+        } else {
+            setName("");
+            setReqName("");
         }
     },[props.categoryId]);
 
@@ -44,21 +50,24 @@ function CategoryEditor(props: CategoryEditorProps) {
             method: 'DELETE'
         };
         fetch(backUrl + '/categories/' + props.categoryId, requestOptions)
-            .then(response => {
+            .then(async response => {
                 setError(null);
-                setInputErrors(null);
+                setInputErrors({});
                 setMessage(null);
                 if (response.status === 204) {
                     return response.text();
                 }
                 if (response.status === 409) {
-                    return Promise.reject({type: "text", data: response.text()});
+                    return Promise.reject({type: "text", data: await response.text()});
                 }
                 return Promise.reject({type: "text", data: "Error occurred, try to refresh a page"});
             })
             .then(message => {
                 setMessage(message);
-                props.changeSelectedId(null)
+                props.changeSelectedId(null);
+                props.listUpdater(prev => !prev);
+                setName("");
+                setReqName("");
             }, error => {
                 setError(error.data)
             });
@@ -66,36 +75,40 @@ function CategoryEditor(props: CategoryEditorProps) {
 
     const saveHandler = () => {
         const preparedCategory = {id: props.categoryId, name: name, reqName: reqName};
+        console.log(JSON.stringify(preparedCategory));
         const requestOptions: RequestInit = {
             method: preparedCategory.id === null ? 'POST' : 'PUT',
             headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify(preparedCategory)
         };
         fetch(backUrl + '/categories', requestOptions)
-            .then(response => {
+            .then(async response => {
                 setError(null);
-                setInputErrors(null);
+                setInputErrors({});
                 setMessage(null);
                 if (response.ok) {
                     return response.text();
                 }
                 if (response.status === 400) {
-                    return Promise.reject({type: "input_errors", data: response.json()});
+                    return Promise.reject({type: "input_errors", data: await response.json()});
                 }
                 if (response.status === 409) {
-                    return Promise.reject({type: "text", data: response.text()});
+                    return Promise.reject({type: "text", data: await response.text()});
                 }
                 return Promise.reject({type: "text", data: "Error occurred, try to refresh a page"});
             })
             .then(message => {
                 setMessage(message);
+                props.changeSelectedId(props.categoryId);
+                props.listUpdater(prev => !prev);
                 if (props.categoryId === null) {
                     setName("");
                     setReqName("");
                 }
             }, error => {
+                console.log(error);
                 if (error.type === "text") {
-                    setError(error.data)
+                    setError(error.data);
                 }
                 if (error.type === "input_errors") {
                     setInputErrors(error.data);
