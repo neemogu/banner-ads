@@ -1,5 +1,7 @@
 package com.github.neemogu.bannerads.banner;
 
+import com.github.neemogu.bannerads.category.CategoryRepository;
+import com.github.neemogu.bannerads.category.CategoryService;
 import com.github.neemogu.bannerads.util.SortDirection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,13 +19,15 @@ import java.util.Optional;
 
 @Service
 public class BannerService {
-    private final BannerRepository repository;
+    private final BannerRepository bannerRepository;
+    private final CategoryRepository categoryRepository;
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
     @Autowired
-    public BannerService(BannerRepository repository) {
-        this.repository = repository;
+    public BannerService(BannerRepository bannerRepository, CategoryRepository categoryRepository) {
+        this.bannerRepository = bannerRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     /**
@@ -35,7 +39,10 @@ public class BannerService {
      * @return Optional - string containing error message if there was an error else empty.
      */
     public Optional<String> saveBanner(Banner banner) {
-        Optional<String> checked;
+        Optional<String> checked = checkCategory(banner);
+        if (checked.isPresent()) {
+            return checked;
+        }
         if (banner.getId() != null) {
             checked = checkExistingBanner(banner);
         } else {
@@ -44,24 +51,31 @@ public class BannerService {
         if (checked.isPresent()) {
             return checked;
         }
-        repository.save(banner);
+        bannerRepository.save(banner);
+        return Optional.empty();
+    }
+
+    private Optional<String> checkCategory(Banner banner) {
+        if (!categoryRepository.existsByIdAndDeletedFalse(banner.getCategory().getId())) {
+            return Optional.of("Category with such ID does not exist");
+        }
         return Optional.empty();
     }
 
     private Optional<String> checkExistingBanner(Banner banner) {
-        if (repository.existsByNameAndIdIsNot(banner.getName(), banner.getId())) {
+        if (bannerRepository.existsByNameAndIdIsNot(banner.getName(), banner.getId())) {
             return Optional.of("Banner with such name is already exist");
         }
         return Optional.empty();
     }
 
     private Optional<String> checkNewBanner(Banner banner) {
-        Optional<Banner> foundByName = repository.findByName(banner.getName());
+        Optional<Banner> foundByName = bannerRepository.findByName(banner.getName());
         if (foundByName.isPresent()) {
             if (!foundByName.get().getDeleted()) {
                 return Optional.of("Banner with such name is already exists");
             } else {
-                repository.delete(foundByName.get());
+                bannerRepository.delete(foundByName.get());
             }
         }
         return Optional.empty();
@@ -74,7 +88,7 @@ public class BannerService {
      *
      */
     public void deleteBanner(Integer id) {
-        Banner banner = repository.findById(id).orElse(null);
+        Banner banner = bannerRepository.findById(id).orElse(null);
         if (banner != null) {
             banner.setDeleted(true);
             saveBanner(banner);
@@ -167,7 +181,7 @@ public class BannerService {
      * @return Optional - banner object if banner with such id exists and not deleted else empty.
      */
     public Optional<Banner> getSpecificBanner(Integer id) {
-        Optional<Banner> found = repository.findById(id);
+        Optional<Banner> found = bannerRepository.findById(id);
         if (found.isPresent() && found.get().getDeleted()) {
             return Optional.empty();
         }
