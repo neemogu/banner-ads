@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/categories")
 public class CategoryController {
     private final CategoryService service;
 
@@ -24,7 +24,7 @@ public class CategoryController {
         category.setId(null);
         Optional<String> error = service.saveCategory(category);
         return error
-                .map(s -> new ResponseEntity<>(s, HttpStatus.BAD_REQUEST))
+                .map(s -> new ResponseEntity<>(s, HttpStatus.CONFLICT))
                 .orElseGet(() -> ResponseEntity.ok("OK"));
     }
 
@@ -32,7 +32,7 @@ public class CategoryController {
     public ResponseEntity<String> updateCategory(@RequestBody @Valid Category category) {
         Optional<String> error = service.saveCategory(category);
         return error
-                .map(s -> new ResponseEntity<>(s, HttpStatus.BAD_REQUEST))
+                .map(s -> new ResponseEntity<>(s, HttpStatus.CONFLICT))
                 .orElseGet(() -> ResponseEntity.ok("OK"));
     }
 
