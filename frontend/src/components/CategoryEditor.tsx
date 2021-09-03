@@ -126,22 +126,22 @@ function CategoryEditor(props: CategoryEditorProps) {
             <div className="editor-form">
                 <table>
                     <tr>
-                        <th className="editor-field-name">Name</th>
-                        <th className="editor-field">
+                        <td className="editor-field-name">Name</td>
+                        <td className="editor-field">
                             <input type="text" value={name} onChange={event => setName(event.target.value)}/>
-                            <span className="editor-field-error">
-                                {inputErrors.name !== undefined ? inputErrors.name : ""}
-                            </span>
-                        </th>
+                        </td>
+                        <td className="editor-field-error">
+                            {inputErrors.name !== undefined ? inputErrors.name : ""}
+                        </td>
                     </tr>
                     <tr>
-                        <th className="editor-field-name">Request ID</th>
-                        <th className="editor-field">
+                        <td className="editor-field-name">Request ID</td>
+                        <td className="editor-field">
                             <input type="text" value={reqName} onChange={event => setReqName(event.target.value)}/>
-                            <span className="editor-field-error">
-                                {inputErrors.reqName !== undefined ? inputErrors.reqName : ""}
-                            </span>
-                        </th>
+                        </td>
+                        <td className="editor-field-error">
+                            {inputErrors.reqName !== undefined ? inputErrors.reqName : ""}
+                        </td>
                     </tr>
                 </table>
             </div>

@@ -44,11 +44,16 @@ function FilterableEntityList(props: FilterableEntityListProps) {
 
     return (
         <div className="filterable-entity-list">
+            <div className="filterable-entity-list-header">
+                {capitalizeFirstLetter(entityPluralForm.get(props.entityType))}
+            </div>
             <SearchBar changeHandler={setSearchStr} entityType={props.entityType}/>
             <EntityList listData={entityList} selectListElementHandler={props.chooseEntity} selectedId={props.selectedId}
-                        isLoaded={isLoaded} error={error}/>
-            <Pagination page={page} defaultPage={1} boundaryCount={2}
-                        count={pageCount} onChange={(e, page) => setPage(page)}/>
+                            isLoaded={isLoaded} error={error}/>
+            <div className="entity-list-pagination">
+                <Pagination page={page} defaultPage={1} boundaryCount={2}
+                            count={pageCount} onChange={(e, page) => setPage(page)}/>
+            </div>
             <div className="new-entity-button-container">
                 <button onClick={() => props.chooseEntity(null)}>
                     Create new {capitalizeFirstLetter(props.entityType)}

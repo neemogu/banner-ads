@@ -1,1 +1,249 @@
+.App, .entity-manager, .filterable-entity-list {
+    height: 100%;
+}
+
+button {
+    font-family: "Comic Sans MS";
+}
+
+.app-body {
+    height: 90%;
+}
+
+.navigation {
+    list-style-type: none;
+    margin: 5px 5px 10px;
+    padding: 10px;
+    background-color: whitesmoke;
+    border: 2px black solid;
+    width: 89%;
+}
+
+.navigation li {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.navigation button {
+    border: 0;
+    background-color: transparent;
+    font-size: 17px;
+}
+
+.navigation .active-tab {
+    color: dodgerblue;
+}
+
+.entity-manager {
+    alignment: top;
+    margin: 0 5px 0;
+}
+
+.entity-editor {
+    display: inline-block;
+    border: 2px solid black;
+    width: 70%;
+    min-width: 400px;
+    height: 90%;
+    min-height: 800px;
+    position: relative;
+    overflow: scroll;
+}
+
+.entity-editor::-webkit-scrollbar {
+    display: none;
+}
+
+.filterable-entity-list {
+    display: inline-block;
+    border: 2px solid black;
+    margin-right: 15px;
+    width: 20%;
+    min-width: 150px;
+    min-height: 800px;
+    overflow-wrap: break-word;
+    overflow: scroll;
+    position: relative;
+}
+
+.filterable-entity-list::-webkit-scrollbar {
+    display: none;
+}
+
+.filterable-entity-list-header {
+    font-size: 22px;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-bottom: 2px solid black;
+    background-color: whitesmoke;
+}
+
+.editor-header {
+    border-bottom: 2px solid black;
+    padding: 10px;
+    font-size: 22px;
+    background-color: whitesmoke;
+    width: 100%;
+}
+
+.new-entity-button-container {
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    width: 93%;
+}
+
+.new-entity-button-container button {
+    border: 2px solid black;
+    background-color: deepskyblue;
+    font-size: 17px;
+    padding: 7px 15px 7px;
+    width: 100%;
+}
+
+.new-entity-button-container button:hover {
+    background-color: lightskyblue;
+    overflow-wrap: break-word;
+}
+
+.search-bar-container {
+    margin: 5px;
+}
+
+.search-bar-container input {
+    width: 100%;
+    border: 1px solid black;
+    height: 30px;
+    padding: 5px;
+}
+
+.entity-list-pagination {
+    padding: 5px;
+}
+
+.entity-list {
+    overflow: scroll;
+    padding: 10px 20px 10px;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.entity-list::-webkit-scrollbar {
+    display: none;
+}
+
+.entity-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.entity-list li {
+    margin-bottom: 10px;
+    overflow-wrap: break-word;
+    cursor: default;
+}
+
+.entity-list li:hover {
+    color: gray;
+}
+
+.entity-editor > div {
+    height: 100%;
+}
+
+.editor-form {
+    padding: 15px 25px 15px;
+}
+
+.editor-form table {
+    text-decoration: none;
+    border-spacing: 30px 25px;
+    letter-spacing: 1px;
+}
+
+.editor-form table input, select, textarea {
+    min-width: 100px;
+    max-width: 500px;
+    border: 2px solid black;
+    padding-left: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.editor-form table input, select, textarea, option {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.editor-form table input {
+    width: 400px;
+    height: 30px;
+}
+
+.editor-form table select {
+    width: 416px;
+    height: 37px;
+}
+
+.editor-form table textarea {
+    width: 400px;
+    height: 70px;
+}
+
+.editor-form td {
+    text-align: left;
+    vertical-align: top;
+}
+
+.editor-error, .editor-message {
+    padding: 5px 10px 5px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    border: 2px solid black;
+    width: 95%;
+    overflow-wrap: break-word;
+    color: whitesmoke;
+    position: absolute;
+    bottom: 50px;
+}
+
+.editor-error {
+    background-color: red;
+}
+
+.editor-message {
+    background-color: limegreen;
+}
+
+.editor-buttons {
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    width: 97%;
+}
+
+.editor-buttons button {
+    color: whitesmoke;
+    border: 2px solid black;
+    font-size: 17px;
+    padding: 7px 15px 7px;
+    min-width: 150px;
+}
+
+.save-button {
+    background-color: black;
+}
+
+.delete-button {
+    background-color: darkred;
+    position: absolute;
+    right: 0;
+}
+
+.editor-field-error {
+    color: red;
+}
+
 

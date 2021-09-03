@@ -12,13 +12,13 @@ function NavTabs(props: NavTabsProps) {
             <li>
                 <button className={props.selectedTab === "banner" ? "active-tab" : "inactive-tab"}
                         onClick={() => props.changeTab("banner")}>
-                    Banners
+                    {props.selectedTab === "banner" ? "▾" : ""} Banners
                 </button>
             </li>
             <li>
                 <button className={props.selectedTab === "category" ? "active-tab" : "inactive-tab"}
                     onClick={() => props.changeTab("category")}>
-                    Categories
+                    {props.selectedTab === "category" ? "▾" : ""} Categories
                 </button>
             </li>
         </ul>

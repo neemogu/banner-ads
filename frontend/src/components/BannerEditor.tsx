@@ -51,6 +51,7 @@ function BannerEditor(props: BannerEditorProps) {
 
     useEffect(() => {
         const getCategoriesList = async () => {
+            setCategories([]);
             const pageSize = 5;
             const pagesResponse = await fetch(backUrl + "/categories/pages?pageSize=" + pageSize);
             const pages = await pagesResponse.text();
@@ -147,27 +148,27 @@ function BannerEditor(props: BannerEditorProps) {
             <div className="editor-form">
                 <table>
                     <tr>
-                        <th className="editor-field-name">Name</th>
-                        <th className="editor-field">
+                        <td className="editor-field-name">Name</td>
+                        <td className="editor-field">
                             <input type="text" value={name} onChange={event => setName(event.target.value)}/>
-                            <span className="editor-field-error">
-                                {inputErrors.name !== undefined ? inputErrors.name : ""}
-                            </span>
-                        </th>
+                        </td>
+                        <td className="editor-field-error">
+                            {inputErrors.name !== undefined ? inputErrors.name : ""}
+                        </td>
                     </tr>
                     <tr>
-                        <th className="editor-field-name">Price</th>
-                        <th className="editor-field">
+                        <td className="editor-field-name">Price</td>
+                        <td className="editor-field">
                             <input type="number" value={price} min={0.0} step={0.01}
                                    onChange={event => setPrice(Number(event.target.value))}/>
-                            <span className="editor-field-error">
-                                {inputErrors.price !== undefined ? inputErrors.price : ""}
-                            </span>
-                        </th>
+                        </td>
+                        <td className="editor-field-error">
+                            {inputErrors.price !== undefined ? inputErrors.price : ""}
+                        </td>
                     </tr>
                     <tr>
-                        <th className="editor-field-name">Category</th>
-                        <th className="editor-field">
+                        <td className="editor-field-name">Category</td>
+                        <td className="editor-field">
                             <select value={categoryId}
                                     onChange={event => setCategoryId(Number(event.target.value))}>
                                 {categories.map((category) => {
@@ -178,17 +179,16 @@ function BannerEditor(props: BannerEditorProps) {
                                     );
                                 })}
                             </select>
-                        </th>
+                        </td>
                     </tr>
                     <tr>
-                        <th className="editor-field-name">Text</th>
-                        <th className="editor-field">
-                            <textarea value={content} rows={4} cols={60}
-                                   onChange={event => setContent(event.target.value)}/>
-                            <span className="editor-field-error">
-                                {inputErrors.text !== undefined ? inputErrors.text : ""}
-                            </span>
-                        </th>
+                        <td className="editor-field-name">Text</td>
+                        <td className="editor-field">
+                            <textarea value={content} onChange={event => setContent(event.target.value)}/>
+                        </td>
+                        <td className="editor-field-error">
+                            {inputErrors.content !== undefined ? inputErrors.content : ""}
+                        </td>
                     </tr>
                 </table>
             </div>
