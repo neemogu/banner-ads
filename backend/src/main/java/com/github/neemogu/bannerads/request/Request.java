@@ -1,6 +1,7 @@
 package com.github.neemogu.bannerads.request;
 
 import com.github.neemogu.bannerads.banner.Banner;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "request")
 public final class Request {
     @Id

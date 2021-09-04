@@ -63,8 +63,16 @@ public class BannerService {
     }
 
     private Optional<String> checkExistingBanner(Banner banner) {
-        if (bannerRepository.existsByNameAndIdIsNot(banner.getName(), banner.getId())) {
-            return Optional.of("Banner with such name is already exist");
+        if (!bannerRepository.existsById(banner.getId())) {
+            return Optional.of("Banner with such ID does not exist");
+        }
+        Optional<Banner> foundByName = bannerRepository.findByNameAndIdIsNot(banner.getName(), banner.getId());
+        if (foundByName.isPresent()) {
+            if (!foundByName.get().getDeleted()) {
+                return Optional.of("Banner with such name is already exists");
+            } else {
+                bannerRepository.delete(foundByName.get());
+            }
         }
         return Optional.empty();
     }

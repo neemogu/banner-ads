@@ -2,6 +2,7 @@ package com.github.neemogu.bannerads.banner;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.neemogu.bannerads.category.Category;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "banner")
 public final class Banner {
     @Id

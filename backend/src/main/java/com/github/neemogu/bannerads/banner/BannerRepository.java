@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BannerRepository extends JpaRepository<Banner, Integer> {
-    boolean existsByNameAndIdIsNot(String name, Integer id);
+    Optional<Banner> findByNameAndIdIsNot(String name, Integer id);
     Optional<Banner> findByName(String name);
     List<Banner> findAllByDeletedFalseAndCategoryIs(Category category);
 }

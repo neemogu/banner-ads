@@ -53,6 +53,9 @@ public final class CategoryService {
     }
 
     private Optional<String> checkExistingCategory(Category category) {
+        if (!categoryRepository.existsByIdAndDeletedFalse(category.getId())) {
+            return Optional.of("Category with such ID does not exist");
+        }
         Optional<String> checkedByName = checkExistingCategoryByName(category);
         if (checkedByName.isPresent()) {
             return checkedByName;
@@ -61,15 +64,26 @@ public final class CategoryService {
     }
 
     private Optional<String> checkExistingCategoryByName(Category category) {
-        if (categoryRepository.existsByNameAndIdIsNot(category.getName(), category.getId())) {
-            return Optional.of("Category with such name is already exist");
+        Optional<Category> foundByName = categoryRepository.findByNameAndIdIsNot(category.getName(), category.getId());
+        if (foundByName.isPresent()) {
+            if (!foundByName.get().getDeleted()) {
+                return Optional.of("Category with such name is already exists");
+            } else {
+                categoryRepository.delete(foundByName.get());
+            }
         }
         return Optional.empty();
     }
 
     private Optional<String> checkExistingCategoryByReqName(Category category) {
-        if (categoryRepository.existsByReqNameAndIdIsNot(category.getReqName(), category.getId())) {
-            return Optional.of("Category with such request name is already exist");
+        Optional<Category> foundByReqName = categoryRepository
+                .findByReqNameAndIdIsNot(category.getReqName(), category.getId());
+        if (foundByReqName.isPresent()) {
+            if (!foundByReqName.get().getDeleted()) {
+                return Optional.of("Category with such request name is already exists");
+            } else {
+                categoryRepository.delete(foundByReqName.get());
+            }
         }
         return Optional.empty();
     }
@@ -191,10 +205,6 @@ public final class CategoryService {
      * @return Optional - category object if category with such id exists and not deleted else empty.
      */
     public Optional<Category> getSpecificCategory(Integer id) {
-        Optional<Category> found = categoryRepository.findById(id);
-        if (found.isPresent() && found.get().getDeleted()) {
-            return Optional.empty();
-        }
-        return found;
+        return categoryRepository.findByIdAndDeletedFalse(id);
     }
 }
