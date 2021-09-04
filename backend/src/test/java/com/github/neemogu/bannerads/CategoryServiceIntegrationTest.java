@@ -54,8 +54,7 @@ public class CategoryServiceIntegrationTest {
         List<String> result = service.getCategoryList(parameters)
                 .stream().map(Category::getName).collect(Collectors.toList());
         assertEquals(result.size(), 2);
-        assertTrue(result.contains("Music"));
-        assertTrue(result.contains("Art"));
+        assertTrue(result.containsAll(List.of("Music", "Art")));
 
         parameters = CategoryFetchParameters.builder().pageSize(2).page(1).build();
         List<Category> result2 = service.getCategoryList(parameters);
@@ -72,8 +71,7 @@ public class CategoryServiceIntegrationTest {
                 .stream().map(Category::getName).collect(Collectors.toList());
         System.out.println(result);
         assertEquals(result.size(), 2);
-        assertTrue(result.contains("Art"));
-        assertTrue(result.contains("Martial"));
+        assertTrue(result.containsAll(List.of("Art", "Martial")));
 
         parameters = CategoryFetchParameters.builder().pageSize(1).searchName(searchName).build();
         assertEquals(service.getCategoryListPageCount(parameters), 2);
