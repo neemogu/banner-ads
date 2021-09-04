@@ -63,7 +63,7 @@ public class BannerService {
     }
 
     private Optional<String> checkExistingBanner(Banner banner) {
-        if (!bannerRepository.existsById(banner.getId())) {
+        if (!bannerRepository.existsByIdAndDeletedFalse(banner.getId())) {
             return Optional.of("Banner with such ID does not exist");
         }
         Optional<Banner> foundByName = bannerRepository.findByNameAndIdIsNot(banner.getName(), banner.getId());
@@ -99,7 +99,7 @@ public class BannerService {
         Banner banner = bannerRepository.findById(id).orElse(null);
         if (banner != null) {
             banner.setDeleted(true);
-            saveBanner(banner);
+            bannerRepository.save(banner);
         }
     }
 
@@ -189,10 +189,6 @@ public class BannerService {
      * @return Optional - banner object if banner with such id exists and not deleted else empty.
      */
     public Optional<Banner> getSpecificBanner(Integer id) {
-        Optional<Banner> found = bannerRepository.findById(id);
-        if (found.isPresent() && found.get().getDeleted()) {
-            return Optional.empty();
-        }
-        return found;
+        return bannerRepository.findByIdAndDeletedFalse(id);
     }
 }

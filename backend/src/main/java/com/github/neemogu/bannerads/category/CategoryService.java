@@ -135,7 +135,7 @@ public final class CategoryService {
                 return Optional.of("Error: category still has banners with IDs: " + bannerIds);
             }
             category.setDeleted(true);
-            saveCategory(category);
+            categoryRepository.save(category);
         }
         return Optional.empty();
     }

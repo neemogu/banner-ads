@@ -10,4 +10,6 @@ public interface BannerRepository extends JpaRepository<Banner, Integer> {
     Optional<Banner> findByNameAndIdIsNot(String name, Integer id);
     Optional<Banner> findByName(String name);
     List<Banner> findAllByDeletedFalseAndCategoryIs(Category category);
+    Optional<Banner> findByIdAndDeletedFalse(Integer id);
+    boolean existsByIdAndDeletedFalse(Integer id);
 }

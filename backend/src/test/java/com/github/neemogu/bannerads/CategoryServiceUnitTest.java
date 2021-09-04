@@ -159,9 +159,6 @@ public class CategoryServiceUnitTest {
     public void givenCategoryWithoutAnyBanners_whenDeleteCategory_thenReturnEmptyOptional() {
         when(repository.findById(category1.getId())).thenReturn(Optional.of(category1));
         when(bannerRepository.findAllByDeletedFalseAndCategoryIs(category1)).thenReturn(Collections.emptyList());
-        when(repository.existsByIdAndDeletedFalse(category1.getId())).thenReturn(true);
-        when(repository.findByNameAndIdIsNot(category1.getName(), category1.getId())).thenReturn(Optional.empty());
-        when(repository.findByReqNameAndIdIsNot(category1.getReqName(), category1.getId())).thenReturn(Optional.empty());
 
         assertTrue(service.deleteCategory(category1.getId()).isEmpty());
         verify(repository, times(1)).save(any());
