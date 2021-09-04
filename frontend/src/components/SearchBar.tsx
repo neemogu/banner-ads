@@ -2,8 +2,8 @@ import React from "react";
 import {entityPluralForm, EntityType} from "../util/EntityType";
 
 interface SearchBarProps {
-    changeHandler: (searchStr: string) => void,
-    entityType: EntityType
+    changeHandler: (searchStr: string) => void, // search bar content callback
+    entityType: EntityType // type of entity to search
 }
 
 function SearchBar(props: SearchBarProps) {

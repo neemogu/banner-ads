@@ -2,9 +2,10 @@ import React, {useEffect, useState} from "react";
 import {backUrl} from "../backend";
 
 interface BannerEditorProps {
-    bannerId: number|null,
-    changeSelectedId: (id: number|null) => void,
-    listUpdater: (setter: (b: boolean) => boolean) => void
+    bannerId: number|null, // id of selected banner to edit
+    changeSelectedId: (id: number|null) => void, // Callback for changing selected ID to edit and display
+    // Function to call after saving or deleting entity to update a list of entities
+    listUpdater: (setter: (b: boolean) => boolean) => void // call (prev => !prev)
 }
 
 function BannerEditor(props: BannerEditorProps) {
@@ -12,9 +13,13 @@ function BannerEditor(props: BannerEditorProps) {
     const [price, setPrice] = useState<number>(0.0);
     const [content, setContent] = useState<string>("");
     const [categoryId, setCategoryId] = useState<number>(0);
+    // list of categories to select from
     const [categories, setCategories] = useState<{id: number, name: string}[]>([]);
+    // form fields post errors
     const [inputErrors, setInputErrors] = useState<any>({})
+    // Text message of an error if there was an error
     const [error, setError] = useState<string|null>(null);
+    // Info/submit message
     const [message, setMessage] = useState<string|null>(null);
 
     useEffect(() => {

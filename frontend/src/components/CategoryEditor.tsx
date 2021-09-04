@@ -2,16 +2,20 @@ import React, {useEffect, useState} from "react";
 import {backUrl} from "../backend";
 
 interface CategoryEditorProps {
-    categoryId: number|null,
-    changeSelectedId: (id: number|null) => void,
-    listUpdater: (setter: (b: boolean) => boolean) => void
+    categoryId: number|null, // id of selected category to edit
+    changeSelectedId: (id: number|null) => void, // Callback for changing selected ID to edit and display
+    // Function to call after saving or deleting entity to update a list of entities
+    listUpdater: (setter: (b: boolean) => boolean) => void // call (prev => !prev)
 }
 
 function CategoryEditor(props: CategoryEditorProps) {
     const [name, setName] = useState<string>("");
     const [reqName, setReqName] = useState<string>("");
+    // form fields post errors
     const [inputErrors, setInputErrors] = useState<any>({})
+    // Text message of an error if there was an error
     const [error, setError] = useState<string|null>(null);
+    // Info/submit message
     const [message, setMessage] = useState<string|null>(null);
 
     useEffect(() => {

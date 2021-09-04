@@ -2,9 +2,13 @@ import React from "react";
 import {EntityType} from "../util/EntityType";
 
 interface NavTabsProps {
-    selectedTab: EntityType
-    changeTab: (tab: EntityType) => void
+    selectedTab: EntityType // type of selected tab
+    changeTab: (tab: EntityType) => void // change selected tab callback
 }
+
+/*
+Navigation component used for selecting current active tab
+ */
 
 function NavTabs(props: NavTabsProps) {
     return (

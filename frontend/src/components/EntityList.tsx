@@ -1,11 +1,11 @@
 import React from "react";
 
 interface EntityListProps {
-    listData: {id: number, name: string}[],
-    selectListElementHandler: (selectedId: number) => void,
-    selectedId: number|null,
-    error: any,
-    isLoaded: boolean
+    listData: {id: number, name: string}[], // list to display
+    selectListElementHandler: (selectedId: number) => void, // change ID of selected entity to highlight callback
+    selectedId: number|null, // ID of selected entity to highlight
+    error: any, // if any error occurred while loading a list
+    isLoaded: boolean // is list loaded
 }
 
 function EntityList(props: EntityListProps) {

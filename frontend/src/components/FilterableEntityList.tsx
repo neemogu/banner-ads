@@ -7,10 +7,10 @@ import {backUrl} from "../backend";
 import {Pagination} from "@material-ui/lab";
 
 interface FilterableEntityListProps {
-    chooseEntity: (entityId: number|null) => void,
-    selectedId: number|null,
-    entityType: EntityType,
-    listUpdater: boolean
+    chooseEntity: (entityId: number|null) => void, // select active entity callback
+    selectedId: number|null, // active entity ID
+    entityType: EntityType, // entity type
+    listUpdater: boolean  // Reload list when this prop is updating
 }
 
 const pageSize = 10;
@@ -18,9 +18,13 @@ const pageSize = 10;
 function FilterableEntityList(props: FilterableEntityListProps) {
     const [entityList, setEntityList] = useState<{id: number, name: string}[]>([]);
     const [searchStr, setSearchStr] = useState<string>("");
+    // current page
     const [page, setPage] = useState<number>(1);
+    // total pages in list
     const [pageCount, setPageCount] = useState<number>(1);
+    // is there was an error loading a list or page count
     const [error, setError] = useState(null);
+    // is list loaded (or finished trying to load if there was an error)
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
     useEffect(() => {
