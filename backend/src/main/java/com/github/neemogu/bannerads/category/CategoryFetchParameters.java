@@ -1,10 +1,12 @@
 package com.github.neemogu.bannerads.category;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @Builder
+@EqualsAndHashCode
 public class CategoryFetchParameters {
     @Builder.Default
     private int page = 0;

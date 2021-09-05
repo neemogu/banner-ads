@@ -69,7 +69,6 @@ public class CategoryServiceIntegrationTest {
                 .pageSize(4).page(0).searchName(searchName).build();
         List<String> result = service.getCategoryList(parameters)
                 .stream().map(Category::getName).collect(Collectors.toList());
-        System.out.println(result);
         assertEquals(result.size(), 2);
         assertTrue(result.containsAll(List.of("Art", "Martial")));
 

@@ -17,7 +17,11 @@ import java.util.Optional;
 
 @Service
 public class RequestService {
-    private static final int bannerPageSize = 10;
+    /**
+     * Page size while searching for a next banner
+     */
+    public static final int bannerPageSize = 5;
+
     private static final long millisInDay = 86400000L;
     private final RequestRepository requestRepository;
     private final BannerService bannerService;
