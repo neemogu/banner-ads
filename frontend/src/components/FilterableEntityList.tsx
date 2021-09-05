@@ -28,6 +28,8 @@ function FilterableEntityList(props: FilterableEntityListProps) {
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
     useEffect(() => {
+        setSearchStr("");
+        setPage(1);
         setIsLoaded(false);
         setError(null);
         const getUrlParameters = () => {

@@ -1,0 +1,38 @@
+version: "3"
+services:
+  frontend:
+    image: neemogu/banners-frontend:latest
+    container_name: frontend
+    ports:
+      - '80:80'
+  db:
+    image: mysql:latest
+    container_name: db
+    expose:
+      - '3306'
+    ports:
+      - '3308:3306'
+    environment:
+      MYSQL_PASSWORD: '180101'
+      MYSQL_USER: 'user'
+      MYSQL_DATABASE: 'banners'
+      MYSQL_ROOT_PASSWORD: '8ckh9vd2'
+    restart: unless-stopped
+  backend:
+    image: neemogu/banners-backend:latest
+    container_name: backend
+    expose:
+      - '8080'
+    ports:
+      - '8080:8080'
+    environment:
+      WAIT_HOSTS: mysql:3306
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://db:3306/banners'
+      SPRING_DATASOURCE_USERNAME: 'user'
+      SPRING_DATASOURCE_PASSWORD: '180101'
+      SPRING_JPA_HIBERNATE_DDL_AUTO: 'update'
+    restart: unless-stopped
+    depends_on: 
+      - db
+    links:
+      - db
