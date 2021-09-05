@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = CategoryController.class)
-public class CategoryControllerTests {
+public class CategoryControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -138,6 +138,7 @@ public class CategoryControllerTests {
         mockMvc.perform(delete("/categories/{id}", category1.getId()))
                 .andExpect(status().isConflict())
                 .andExpect(content().string("IDs: [1, 2, 3]"));
+        verify(service, times(1)).deleteCategory(category1.getId());
     }
 
     @Test
@@ -146,6 +147,7 @@ public class CategoryControllerTests {
         when(service.deleteCategory(category1.getId())).thenReturn(Optional.empty());
         mockMvc.perform(delete("/categories/{id}", category1.getId()))
                 .andExpect(status().isNoContent());
+        verify(service, times(1)).deleteCategory(category1.getId());
     }
 
     @Test
@@ -186,6 +188,7 @@ public class CategoryControllerTests {
                 .content(objectMapper.writeValueAsString(category1)))
                 .andExpect(status().isConflict())
                 .andExpect(content().string("ERROR"));
+        verify(service, times(2)).saveCategory(any());
     }
 
     @Test
@@ -202,5 +205,6 @@ public class CategoryControllerTests {
                 .content(objectMapper.writeValueAsString(category1)))
                 .andExpect(status().isOk())
                 .andExpect(content().string("OK"));
+        verify(service, times(2)).saveCategory(any());
     }
 }
