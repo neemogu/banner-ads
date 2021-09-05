@@ -28,8 +28,6 @@ function FilterableEntityList(props: FilterableEntityListProps) {
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
     useEffect(() => {
-        setSearchStr("");
-        setPage(1);
         setIsLoaded(false);
         setError(null);
         const getUrlParameters = () => {
@@ -48,12 +46,20 @@ function FilterableEntityList(props: FilterableEntityListProps) {
                 error => setError(error))
     }, [searchStr, page, props.entityType, props.listUpdater]);
 
+    useEffect(() => {
+        setSearchStr("");
+    }, [props.entityType]);
+
+    useEffect(() => {
+        setPage(1);
+    }, [searchStr, props.entityType, props.listUpdater]);
+
     return (
         <div className="filterable-entity-list">
             <div className="filterable-entity-list-header">
                 {capitalizeFirstLetter(entityPluralForm.get(props.entityType))}
             </div>
-            <SearchBar changeHandler={setSearchStr} entityType={props.entityType}/>
+            <SearchBar value={searchStr} changeHandler={setSearchStr} entityType={props.entityType}/>
             <EntityList listData={entityList} selectListElementHandler={props.chooseEntity} selectedId={props.selectedId}
                             isLoaded={isLoaded} error={error}/>
             <div className="entity-list-pagination">
