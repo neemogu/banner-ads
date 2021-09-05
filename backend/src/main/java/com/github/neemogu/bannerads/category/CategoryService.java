@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public final class CategoryService {
+public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final BannerRepository bannerRepository;
     @PersistenceUnit

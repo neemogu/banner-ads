@@ -34,7 +34,7 @@ public class RequestControllerTest {
         mockMvc.perform(get("/bid")
                 .param("category", "music"))
                 .andExpect(status().isBadRequest());
-        verify(requestService, times(1)).getNextBannerContent(any(), any(), any());
+        verify(requestService, times(1)).getNextBannerContent(any(), any(), eq("music"));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class RequestControllerTest {
                 .param("category", "music"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("CONTENT"));
-        verify(requestService, times(1)).getNextBannerContent(any(), any(), any());
+        verify(requestService, times(1)).getNextBannerContent(any(), any(), eq("music"));
     }
 
     @Test
@@ -53,6 +53,6 @@ public class RequestControllerTest {
         mockMvc.perform(get("/bid")
                 .param("category", "music"))
                 .andExpect(status().isNoContent());
-        verify(requestService, times(1)).getNextBannerContent(any(), any(), any());
+        verify(requestService, times(1)).getNextBannerContent(any(), any(), eq("music"));
     }
 }

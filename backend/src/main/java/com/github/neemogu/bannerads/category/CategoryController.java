@@ -19,7 +19,6 @@ public class CategoryController {
         this.service = service;
     }
 
-
     /**
      * Maximum size of a page
      */
