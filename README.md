@@ -2,7 +2,7 @@ Starting an application:
 > docker-compose up
 
 Database front:
-> localhost:80
+> http://localhost
 
 API:
-> localhost:8080
+> http://localhost:8080/bid?category=...
