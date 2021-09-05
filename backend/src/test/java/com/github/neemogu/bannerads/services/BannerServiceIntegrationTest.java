@@ -1,4 +1,4 @@
-package com.github.neemogu.bannerads;
+package com.github.neemogu.bannerads.services;
 
 import com.github.neemogu.bannerads.banner.*;
 import com.github.neemogu.bannerads.category.Category;

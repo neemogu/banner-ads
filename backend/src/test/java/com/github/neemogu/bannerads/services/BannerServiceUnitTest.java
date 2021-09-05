@@ -1,4 +1,4 @@
-package com.github.neemogu.bannerads;
+package com.github.neemogu.bannerads.services;
 
 import com.github.neemogu.bannerads.banner.Banner;
 import com.github.neemogu.bannerads.banner.BannerRepository;
