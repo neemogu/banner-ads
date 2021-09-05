@@ -22,6 +22,17 @@ public class RequestController {
         this.service = service;
     }
 
+    /**
+     * Endpoint to get content of next most priced banner for today.
+     * Returns only unique banners for one IP and user agent for one day
+     *
+     * @param categoryReqName Request parameter - category request name to get next banner from
+     * @param request To get IP address and User-Agent header
+     * @return HTTP 400 with error message if no category with such request name exists
+     * HTTP 409 if no banners for such IP and user agent left today
+     * HTTP 200 with next banner content if ok
+     */
+
     @GetMapping
     public ResponseEntity<String> getNextBanner(
             @RequestParam(name = "category") String categoryReqName,

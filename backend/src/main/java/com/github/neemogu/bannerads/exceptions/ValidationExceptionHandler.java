@@ -12,6 +12,13 @@ import java.util.Map;
 
 @ControllerAdvice
 public class ValidationExceptionHandler {
+
+    /**
+     * Default validation exception handler
+     *
+     * @param ex Validation exception
+     * @return HTTP 400 with an object containing key-value of objects fields and validation error messages
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
